@@ -30,7 +30,7 @@ class XarmNavigator:
         self.goStart()
         
     def goStart(self):
-        self.movePos(START_POS)
+        self.movePosWithTour(START_POS)
         
     def grip(self, newZ=220):
         x, y, z = self.getCurrentPos()

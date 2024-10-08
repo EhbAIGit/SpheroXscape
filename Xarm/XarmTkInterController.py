@@ -16,17 +16,19 @@ class XarmTkInterController:
         
         self.robotControl:XarmNavigator = navigator
         
+        self.t = None
+        self.thr = None    
         
         Button(self.leftframe, text="Baseposition", command=self.basePosition).pack(side = TOP)
         
         Button(self.leftframe, text="Grip open", command=self.gripperOpen).pack(side = TOP)
         Button(self.leftframe, text="Grip close", command=self.gripperClose).pack(side = TOP)
         
-        Button(self.leftframe, text="Grap Sphero Camera", command=self.robotControl.gripBasedOnCameraCenter).pack(side = TOP)
-        Button(self.leftframe, text="Drop Sphero Camera", command=self.robotControl.dropBasedOnCameraCenter).pack(side = TOP)
+        Button(self.leftframe, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).pack(side = TOP)
+        Button(self.leftframe, text="Drop Sphero Camera", command=self.dropBasedOnCameraCenter).pack(side = TOP)
         
-        Button(self.leftframe, text="Grap Sphero", command=self.robotControl.grip).pack(side = TOP)
-        Button(self.leftframe, text="Drop Sphero", command=self.robotControl.drop).pack(side = TOP)
+        Button(self.leftframe, text="Grap Sphero", command=self.grip).pack(side = TOP)
+        Button(self.leftframe, text="Drop Sphero", command=self.drop).pack(side = TOP)
         
         Button(self.leftframe, text="Start Traject", command=self.traject).pack(side = TOP) 
         Button(self.leftframe, text="Stop traject", command=self.stopThread).pack(side = TOP) 
@@ -38,6 +40,22 @@ class XarmTkInterController:
         
         self.fillPositionsEntry()
         self.fillPositions()
+    
+    def gripBasedOnCameraCenter(self):
+        self.stopThread()
+        self.robotControl.gripBasedOnCameraCenter()
+    
+    def dropBasedOnCameraCenter(self):
+        self.stopThread()
+        self.robotControl.dropBasedOnCameraCenter()
+
+    def grip(self):
+        self.stopThread()
+        self.robotControl.grip()
+    
+    def drop(self):
+        self.stopThread()
+        self.robotControl.drop()
 
     def createCoordinateInput(self):
         self.coordinatesFrame = Frame(self.leftframe)
@@ -95,27 +113,36 @@ class XarmTkInterController:
         self.root.mainloop() 
         
     def basePosition(self):
+        self.stopThread()
         self.robotControl.goStart()
         self.fillPositions()
     
     def gripperOpen(self):
+        self.stopThread()
         self.robotControl.gripOpen()
         
     def gripperClose(self):
+        self.stopThread()
         self.robotControl.gripClose()
     
     def trackSphero(self):
+        self.stopThread()
         self.t = Event()
         self.thr = Thread(target = self.robotControl.findSphero, args={self.t,})
         self.thr.start()
     
     def traject(self):
+        self.stopThread()
         self.t = Event()
         self.thr = Thread(target = self.robotControl.runTraject, args={self.t,})
         self.thr.start()
     
     def stopThread(self):
-        self.t.set()
+        if self.t and self.thr:
+            self.t.set()
+            self.thr.join()
+            self.t = None
+            self.thr = None
   
     def move(self): 
         self.robotControl.movePos(self.getCoordinateFromGUI())
