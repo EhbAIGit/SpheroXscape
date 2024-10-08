@@ -22,6 +22,12 @@ class XarmTkInterController:
         Button(self.leftframe, text="Grip open", command=self.gripperOpen).pack(side = TOP)
         Button(self.leftframe, text="Grip close", command=self.gripperClose).pack(side = TOP)
         
+        Button(self.leftframe, text="Grap Sphero Camera", command=self.robotControl.gripBasedOnCameraCenter).pack(side = TOP)
+        Button(self.leftframe, text="Drop Sphero Camera", command=self.robotControl.dropBasedOnCameraCenter).pack(side = TOP)
+        
+        Button(self.leftframe, text="Grap Sphero", command=self.robotControl.grip).pack(side = TOP)
+        Button(self.leftframe, text="Drop Sphero", command=self.robotControl.drop).pack(side = TOP)
+        
         Button(self.leftframe, text="Start Traject", command=self.traject).pack(side = TOP) 
         Button(self.leftframe, text="Stop traject", command=self.stopThread).pack(side = TOP) 
         
