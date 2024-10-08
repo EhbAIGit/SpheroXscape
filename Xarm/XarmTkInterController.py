@@ -40,11 +40,31 @@ class XarmTkInterController:
         
         self.fillPositionsEntry()
         self.fillPositions()
+        
+        Button(self.leftframe, text="Place Sphero in loader", command=self.placeSphero).pack(side = TOP)
+        Button(self.leftframe, text="Grap Sphero from loader", command=self.grapSpheroFromLoader).pack(side = TOP)
+        Button(self.leftframe, text="Place all Sphero's", command=self.placeAllSpheros).pack(side = TOP)
+        
+        self.spheroNumberText = StringVar(self.root)
+        self.spheroNumberEntry = Entry(self.leftframe, width=3, textvariable=self.spheroNumberText)
+        self.spheroNumberEntry.pack()
+
+    def placeSphero(self):
+        nr = int(self.spheroNumberText.get())
+        self.robotControl.dropLoadPos(nr)
+
+    def grapSpheroFromLoader(self):
+        pass
+    
+    def placeAllSpheros(self):
+        self.stopThread()
+        self.robotControl.gripAllLoadPos()
     
     def gripBasedOnCameraCenter(self):
         self.stopThread()
         self.robotControl.gripBasedOnCameraCenter()
     
+    #TODO block during session and provide reset button
     def dropBasedOnCameraCenter(self):
         self.stopThread()
         self.robotControl.dropBasedOnCameraCenter()
