@@ -1,4 +1,5 @@
 from XarmNavigator import XarmNavigator
+from XarmSpheroEvents import XarmSpheroEvents
 import argparse
 import logging
 
@@ -48,6 +49,13 @@ def selectController(args):
                     else createTkInterController(navigator) if args.controller == "gui" \
                     else createCommandLineController(navigator)
 
+def selectEvents(args):
+    if args.mqtt == "yes":
+        from XarmSpheroEventsMqtt import XarmSpheroEventsMqtt
+        return XarmSpheroEvents(XarmSpheroEventsMqtt())
+    return XarmSpheroEvents()
+    
+
 if __name__ == "__main__":
     logging.basicConfig()
     logging.getLogger().setLevel(logging.INFO)
@@ -56,12 +64,14 @@ if __name__ == "__main__":
 
     parser.add_argument("-c", "--controller", choices=["keyboard", "gui","gamepad"], default="keyboard")
     parser.add_argument("-e", "--environment", choices=["real", "simulated"], default="real")
+    parser.add_argument("-m", "--mqtt", choices=["yes", "no"], default="no")
 
     args = parser.parse_args()
 
     driver = selectDriver(args)
+    events = selectEvents(args)
     cameraFactory = selectCamera(args)
-    navigator = XarmNavigator(driver, cameraFactory)
+    navigator = XarmNavigator(driver, cameraFactory, events)
     controller = selectController(args)
     
     controller.run()

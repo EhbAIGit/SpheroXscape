@@ -16,6 +16,11 @@ DROP_POSITIONS = ((235, -200, 400),
                     (235, 100, 400),
                     (235, 200, 400))
 
+MQTT_HOST = "localhost"
+MQTT_PORT = 1883
+MQTT_KEEPALIVE_INTERVAL = 45
+MQTT_TOPIC = "xarmSpheroEvents"
+
 WARMUP_CAM = 1
 
 SCAN_NEXT_Y = 125

@@ -30,6 +30,7 @@ class XarmNavigator:
         
         self.x, self.y, self.z = self.driver.getLivePosition()
         self.goStart()
+        self.events.applicationStarted(self.getCurrentPos())
         
     def goStart(self):
         self.movePosWithTour(START_POS)
@@ -79,6 +80,7 @@ class XarmNavigator:
         return isOk
     
     def gripAllLoadPos(self):
+        self.events.gettingSpherosFromLoadstation(self.getCurrentPos())
         for i in range(len(LOAD_POSITIONS)):
             self.gripLoadPos(i + 1)
     
@@ -94,6 +96,7 @@ class XarmNavigator:
             self.movePosWithTour(LOAD_POSITIONS[loadNumber - 1])
             self.drop(LOAD_GRIP_Z)
             self.movePosWithTour(DROP_POSITIONS[loadNumber - 1])
+            self.events.spheroDroppedAtLoader(self.getCurrentPos(), loadNumber)
  
     def getCurrentPos(self):
         return (self.x, self.y, self.z)
@@ -236,6 +239,7 @@ class XarmNavigator:
             if res:
                 print("found 1")
                 self.trackSphero(event, WAIT_TIME_BEFORE_STOP_TRACKING)
+                self.events.spheroLost(self.getCurrentPos)
     
     def moveYAndScanN(self, event, direction):        
         xn = self.path.startCloseTo(self.getCurrentPos(), direction)         

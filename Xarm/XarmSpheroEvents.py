@@ -7,11 +7,21 @@ class XarmSpheroEvents:
     
     def _log(self, message):
         self.logger.info(message)  
-        
+
+    def applicationStarted(self, position):
+        if self.listener:
+            self.listener.applicationStarted(position)
+        self._log(f"Application has started") 
+
     def spheroDetected(self, position):
         if self.listener:
             self.listener.spheroDetected(position)
         self._log(f"Sphero has been detected") 
+    
+    def spheroLost(self, position):
+        if self.listener:
+            self.listener.spheroLost(position)
+        self._log(f"Sphero is lost") 
 
     def spheroCatched(self, position):
         if self.listener:
@@ -45,6 +55,17 @@ class XarmSpheroEvents:
     
     def spheroDroppedAt(self, position):
         if self.listener:
-            self.listener.droppingAt(position)
-        self._log(f"Dropping Sphero at {position}")  
+            self.listener.spheroDroppedAt(position)
+        self._log(f"Dropping Sphero at {position}")
+        
+    def spheroDroppedAtLoader(self, position, loader):
+        if self.listener:
+            self.listener.spheroDroppedAtLoader(position, loader)
+        self._log(f"Dropping Sphero at loader {loader}")
+    
+    def gettingSpherosFromLoadstation(self, position):
+        if self.listener:
+            self.listener.gettingSpherosFromLoadstation(position)
+        self._log(f"Positioning Sphero's")
+  
         
