@@ -1,12 +1,16 @@
 from tkinter import *
 from threading import *
 from XarmNavigator import XarmNavigator
+from Constants import *
+
+SIZE_CANVAS_Y = 950
+SIZE_CANVAS_X = 950
 
 class XarmTkInterController:
 
     def __init__(self, navigator):
         self.root = Tk() 
-        self.root.geometry("800x800") 
+        self.root.geometry("1350x1200") 
 
         self.leftframe = Frame(self.root)  
         self.leftframe.pack(side = LEFT)  
@@ -48,6 +52,65 @@ class XarmTkInterController:
         self.spheroNumberText = StringVar(self.root)
         self.spheroNumberEntry = Entry(self.leftframe, width=3, textvariable=self.spheroNumberText)
         self.spheroNumberEntry.pack()
+        
+        self.prepareCanvas()
+        
+    def prepareCanvas(self):
+        self.canvas = Canvas(self.rightframe, bg="white", height=950, width=950)
+        self.canvas.bind("<Button-1>", self.canvasCallback)
+        
+        self.drawCanvas()
+        
+        self.canvas.pack()
+    
+    def drawCanvas(self, point = None):
+        self.canvas.delete("all")
+        self.drawLinesOnCanvas(INNER_BOUNDARY.coords)
+        self.drawLinesOnCanvas(OUTER_BOUNDARY.coords)
+        self.drawLinesOnCanvas(BACK_BOUNDARY.coords)
+        if point:
+            self.drawPointOnCanvas(point)
+    
+    def xarmToCanvasX(self, x):
+        return (SIZE_CANVAS_X // 2) - x
+    
+    def xarmToCanvasY(self, y):
+        return (SIZE_CANVAS_Y // 2) - y
+        
+    def xarmToCanvasCoord(self, coord):
+        x, y = coord
+        return (self.xarmToCanvasX(x), self.xarmToCanvasY(y))
+
+    def canvasToXarmX(self, x):
+        return (SIZE_CANVAS_X // 2) - x
+    
+    def canvasToXarmY(self, y):
+        return (SIZE_CANVAS_Y // 2) - y
+        
+    def canvasToXarmCoord(self, coord):
+        x, y = coord
+        return (self.canvasToXarmX(x), self.canvasToXarmY(y))
+
+    def drawPointOnCanvas(self, point):
+        x, y = point
+        x1, y1 = (x - 1), (y - 1)
+        x2, y2 = (x + 1), (y + 1)
+        dotColor = "#476042"
+        self.canvas.create_oval(x1, y1, x2, y2, fill=dotColor, outline=dotColor, width=10)
+    
+    def drawLinesOnCanvas(self, coords):
+        for pos in range(1, len(coords)):
+            startX, startY = self.xarmToCanvasCoord(coords[pos - 1])
+            endX, endY = self.xarmToCanvasCoord(coords[pos])
+            self.canvas.create_line(startX, startY, endX, endY)
+
+    def canvasCallback(self, event):
+        print("clicked at", event.x, event.y)
+        coord = (event.x, event.y)
+        self.drawCanvas(coord)
+        x, y = self.canvasToXarmCoord(coord)
+        self.xText.set(str(x))
+        self.yText.set(str(y))
 
     def placeSphero(self):
         nr = int(self.spheroNumberText.get())
