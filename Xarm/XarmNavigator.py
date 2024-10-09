@@ -10,20 +10,12 @@ class XarmNavigator:
         self.driver = driver
         self.spheroDetectorFactory = spheroDetectorFactory
         
-        self.zMin = 219
-        self.zMax = 550
+        self.zMin = Z_MIN
+        self.zMax = Z_MAX
         
-        self.outerBoundary = SquareBoundary(
-            xMin=-414.8, xMax=421.2,
-            yMin=-411.3, yMax=464.3,
-            zMin=self.zMin, zMax = self.zMax)
-        
-        self.innerBoundary = SquareBoundary(
-            xMin=-150, xMax=150,
-            yMin=-150, yMax=150,
-            zMin=None,    zMax = None)
-        
-        self.lineBoundary = LineBoundary((-150,0), (-1000,0))
+        self.outerBoundary = OUTER_BOUNDARY
+        self.innerBoundary = INNER_BOUNDARY
+        self.lineBoundary  = BACK_BOUNDARY
                
         self.path = XarmUPath(START_POS, SCAN_NEXT_Y, SCAN_NEXT_X)
         self.events = events

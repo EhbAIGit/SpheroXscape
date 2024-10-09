@@ -1,3 +1,5 @@
+from Boundaries import *
+
 Y_DETECTION_BOUNDARY_FOR_LOAD = 260
 
 WAIT_TIME_BEFORE_STOP_TRACKING = 5
@@ -31,3 +33,18 @@ START_Y = 0
 START_Z = 400
 
 START_POS = (START_X, START_Y, START_Z)
+
+Z_MIN = 219
+Z_MAX = 550
+
+OUTER_BOUNDARY = SquareBoundary(
+    xMin=-414.8, xMax=421.2,
+    yMin=-411.3, yMax=464.3,
+    zMin=Z_MIN, zMax = Z_MAX)
+
+INNER_BOUNDARY = SquareBoundary(
+    xMin=-150, xMax=150,
+    yMin=-150, yMax=150,
+    zMin=None,    zMax = None)
+
+BACK_BOUNDARY = LineBoundary((-150,0), (-1000,0))
