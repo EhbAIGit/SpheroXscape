@@ -9,14 +9,13 @@ import paho.mqtt.client as mqtt
 import math
 
 '''
-python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-9DD8 1
-python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-2BBE 2
-python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-27A5 3
-python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-81E0 4
-python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-7740 5
+SB-9DD8 1
+SB-2BBE 2
+SB-27A5 3
+SB-81E0 4
+SB-7740 5
 '''
 
-print("Script v2 Launched")
 
 class SpheroController:
     def __init__(self, joystick, color, ball_number):
@@ -38,6 +37,7 @@ class SpheroController:
         self.gameStartTime = time.time()
         self.gameOn = False
         self.boosterCounter = 0
+        self.calibrated =  False
 
         # MQTT instellen
         self.mqtt_broker = "broker.emqx.io"
@@ -124,6 +124,7 @@ class SpheroController:
         api.set_heading(new_heading)
 
     def exit_calibration_mode(self, api):
+        self.calibrated = True
         self.send_mqtt_message("sphero/ball_status",f"New player started: {self.number}")
         self.calibration_mode = False
         self.gameOn = True
@@ -234,7 +235,7 @@ class SpheroController:
                     boosterButton =  self.joystick.get_button(2)
                     MoveButton = self.joystick.get_button(0) 
                     button_x = self.joystick.get_button(1)  # Assuming X button is at index 0
-                    if button_x == 0 and self.previous_button == 1:
+                    if button_x == 0 and self.previous_button == 1 and self.calibrated == False:
                         self.toggle_calibration_mode(api, X)  # Pass Y value to toggle_calibration_mode
                     self.previous_button = button_x 
 
