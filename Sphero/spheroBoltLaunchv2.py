@@ -16,6 +16,8 @@ python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-81E0 4
 python /home/ubuntu/ILSF2024/SpheroBolt/spheroBoltLaunch.py SB-7740 5
 '''
 
+print("Script v2 Launched")
+
 class SpheroController:
     def __init__(self, joystick, color, ball_number):
         self.toy = None
