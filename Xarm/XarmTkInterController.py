@@ -11,6 +11,8 @@ class XarmTkInterController:
     def __init__(self, navigator):
         self.root = Tk() 
         self.root.geometry("1350x1200") 
+        
+        self.root.attributes('-fullscreen', True)
 
         self.leftframe = Frame(self.root)  
         self.leftframe.pack(side = LEFT)  
