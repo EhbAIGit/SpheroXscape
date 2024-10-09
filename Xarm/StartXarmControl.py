@@ -7,7 +7,8 @@ def createSimulationEnvironment():
     from turtle import Turtle
     from FakeXarmDriver import FakeXarmDriver
     from FakeXarmDriver import ThreadSafeWrapper
-    return ThreadSafeWrapper(FakeXarmDriver(Turtle()))
+    return FakeXarmDriver(Turtle())
+    #return ThreadSafeWrapper(FakeXarmDriver(Turtle()))
 
 def createRealEnvironment():
     from XarmDriver import XarmDriver
