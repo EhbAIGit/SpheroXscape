@@ -1,5 +1,6 @@
 from XarmNavigator import XarmNavigator
-import argparse 
+import argparse
+import logging
 
 def createSimulationEnvironment():
     from turtle import Turtle
@@ -48,6 +49,9 @@ def selectController(args):
                     else createCommandLineController(navigator)
 
 if __name__ == "__main__":
+    logging.basicConfig()
+    logging.getLogger().setLevel(logging.INFO)
+
     parser = argparse.ArgumentParser()
 
     parser.add_argument("-c", "--controller", choices=["keyboard", "gui","gamepad"], default="keyboard")
