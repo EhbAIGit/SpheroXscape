@@ -157,8 +157,14 @@ class SpheroController:
     def print_battery_level(self, api):
         battery_voltage = Power.get_battery_voltage(self.toy)
         print(f"Battery status of {self.number}: {battery_voltage} V ")
-        if (battery_voltage < 4.15):
+        if (battery_voltage < 3.9):
             self.send_mqtt_message("sphero/ball_status/warning",f"Warning:  Battery for number {self.number} is low ({battery_voltage} Volt)")
+        if (battery_voltage < 3.7):
+            self.send_mqtt_message("sphero/ball_status/warning",f"ERROR:  Battery for number {self.number} is critical ({battery_voltage} Volt), replace it!")
+        if (battery_voltage < 4.2):
+            self.send_mqtt_message("sphero/ball_status/warning",f"ERROR:  {self.number} has been shut down because battery went down!")
+            exit("Battery")
+
 
     def control_toy(self):
         lower_than_negative_threshold_time = None
