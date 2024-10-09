@@ -10,7 +10,7 @@ spheroIds = ("SB-24D3","SB-1D86","SB-27A5","SB-81E0","SB-7740")
 # Functie om het SSH-commando uit te voeren
 def run_ssh_command(sshrpi,id, number, joystick):
     try:
-        ssh_command = f"./sphero1.sh {id} {number} {joystick}"
+        ssh_command = f"./sphero.sh {id} {number} {joystick}"
         subprocess.Popen(["ssh", sshrpi, ssh_command])
     except Exception as e:
         status_label.config(text=f"Fout: {e}")

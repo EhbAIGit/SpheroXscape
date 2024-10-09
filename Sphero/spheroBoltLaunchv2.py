@@ -249,6 +249,8 @@ class SpheroController:
                             self.move(api,self.base_heading, 100)
                             self.boosterCounter +=1
                             time.sleep(0.5)
+                            if (self.boosterCounter == 1 ) : self.send_mqtt_message("sphero/ball_status",f"Player {self.number} has used it's first booster!")
+                            if (self.boosterCounter == 4 ) : self.send_mqtt_message("sphero/ball_status",f"Player {self.number} has used it's last booster!")
 
                         elif Y < -0.7:
                             self.move(api, self.base_heading - 180, self.speed)  # Left
