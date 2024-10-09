@@ -41,16 +41,15 @@ class XarmTkInterController:
         
         self.belowCanvasFrame = Frame(self.rightframe)
         
-        self.prepareCanvas()
         
         Button(self.belowCanvasFrame, text="Start Traject", command=self.traject).pack(side = LEFT) 
-        Button(self.belowCanvasFrame, text="Stop traject", command=self.stopThread).pack(side = LEFT) 
         Button(self.belowCanvasFrame, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).pack(side = LEFT)
         Button(self.belowCanvasFrame, text="PS 1", command=self.placeSphero1).pack(side = LEFT)
         Button(self.belowCanvasFrame, text="PS 2", command=self.placeSphero2).pack(side = LEFT)
         Button(self.belowCanvasFrame, text="PS 3", command=self.placeSphero3).pack(side = LEFT)
         Button(self.belowCanvasFrame, text="PS 4", command=self.placeSphero4).pack(side = LEFT)
         Button(self.belowCanvasFrame, text="PS 5", command=self.placeSphero5).pack(side = LEFT)
+        Button(self.belowCanvasFrame, text="Stop traject", command=self.stopThread).pack(side = LEFT) 
         # Button(self.belowCanvasFrame, text="Grap Sphero from loader", command=self.grapSpheroFromLoader).pack(side = LEFT)
         
         #self.spheroNumberText = StringVar(self.root)
@@ -58,7 +57,8 @@ class XarmTkInterController:
         #self.spheroNumberEntry.pack(side = LEFT)
         #Button(self.belowCanvasFrame, text="Grap all Sphero's", command=self.placeAllSpheros).pack(side = LEFT)
         
-        self.belowCanvasFrame.pack(side = BOTTOM)
+        self.belowCanvasFrame.pack(side = TOP)
+        self.prepareCanvas()
         
         
         
@@ -116,7 +116,6 @@ class XarmTkInterController:
             self.canvas.create_line(startX, startY, endX, endY)
 
     def canvasCallback(self, event):
-        print("clicked at", event.x, event.y)
         coord = (event.x, event.y)
         self.drawCanvas(coord)
         x, y = self.canvasToXarmCoord(coord)
@@ -168,7 +167,7 @@ class XarmTkInterController:
 
     def createCoordinateInput(self):
         self.coordinatesFrame = Frame(self.rightframe)
-        self.coordinatesFrame.pack(side = TOP)
+        self.coordinatesFrame.pack(side = BOTTOM)
 
         Button(self.coordinatesFrame, text="Go baseposition", command=self.basePosition).pack(side = LEFT)
 
@@ -223,6 +222,8 @@ class XarmTkInterController:
     def basePosition(self):
         self.stopThread()
         self.robotControl.goStart()
+        x,y,_ = self.robotControl.getCurrentPos()
+        self.drawCanvas((self.xarmToCanvasX(x), self.xarmToCanvasY(y)))
         self.fillPositionsEntry()
     
     def gripperOpen(self):
@@ -253,4 +254,5 @@ class XarmTkInterController:
             self.thr = None
   
     def move(self): 
+        self.stopThread()
         self.robotControl.movePosWithTour(self.getCoordinateFromGUI())
