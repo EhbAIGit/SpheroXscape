@@ -5,13 +5,13 @@ from Constants import *
 import random
 
 class XarmSpheroEventsMqtt:
-    def __init__(self, listener = None):
+    def __init__(self, host, listener = None):
         self.logger = logging.getLogger(__name__)
         self.listener = listener
         self.clientId = f'python-mqtt-{random.randint(0, 1000)}'
         self.mqtt = mqtt.Client(client_id=self.clientId, callback_api_version=mqtt.CallbackAPIVersion.VERSION2)
         self.mqtt.on_connect = self.onConnect
-        self.mqtt.connect(MQTT_HOST, MQTT_PORT)
+        self.mqtt.connect(host, MQTT_PORT)
         
     def createMessage(self, code, position, payload):
         message = {
