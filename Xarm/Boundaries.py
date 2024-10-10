@@ -4,7 +4,8 @@ from shapely.geometry import LineString, Point, Polygon
 class SquareBoundary:
     
     def __init__(self, xMin, xMax, yMin, yMax, zMin:None, zMax:None):
-        self.polygon = Polygon(((xMin, yMin), (xMin, yMax), (xMax, yMax), (xMax, yMin), (xMin, yMin)))
+        self.coords = ((xMin, yMin), (xMin, yMax), (xMax, yMax), (xMax, yMin), (xMin, yMin))
+        self.polygon = Polygon(self.coords)
     
     def inside(self, point):
         return shapely.intersects(self.polygon, Point(point))
@@ -21,7 +22,8 @@ class SquareBoundary:
 class LineBoundary:
     
     def __init__(self, start, end):
-        self.line = LineString([start, end])
+        self.coords = [start, end]
+        self.line = LineString(self.coords)
     
     def inside(self, point):
         return shapely.intersects(self.line, Point(point))

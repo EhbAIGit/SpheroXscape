@@ -1,33 +1,28 @@
 from Boundaries import SquareBoundary, LineBoundary
 from Constants import *
 from XarmUPath import XarmUPath, PathDirection
+from XarmSpheroEvents import XarmSpheroEvents
 import threading
 import time
 
 class XarmNavigator:
-    def __init__(self, driver, spheroDetectorFactory):
+    def __init__(self, driver, spheroDetectorFactory, events = XarmSpheroEvents()):
         self.driver = driver
         self.spheroDetectorFactory = spheroDetectorFactory
         
-        self.zMin = 219
-        self.zMax = 550
+        self.zMin = Z_MIN
+        self.zMax = Z_MAX
         
-        self.outerBoundary = SquareBoundary(
-            xMin=-414.8, xMax=421.2,
-            yMin=-411.3, yMax=464.3,
-            zMin=self.zMin, zMax = self.zMax)
-        
-        self.innerBoundary = SquareBoundary(
-            xMin=-150, xMax=150,
-            yMin=-150, yMax=150,
-            zMin=None,    zMax = None)
-        
-        self.lineBoundary = LineBoundary((-150,0), (-1000,0))
+        self.outerBoundary = OUTER_BOUNDARY
+        self.innerBoundary = INNER_BOUNDARY
+        self.lineBoundary  = BACK_BOUNDARY
                
         self.path = XarmUPath(START_POS, SCAN_NEXT_Y, SCAN_NEXT_X)
+        self.events = events
         
         self.x, self.y, self.z = self.driver.getLivePosition()
         self.goStart()
+        self.events.applicationStarted(self.getCurrentPos())
         
     def goStart(self):
         self.movePosWithTour(START_POS)
@@ -37,25 +32,30 @@ class XarmNavigator:
         self.movePos((x, y, newZ))
         self.gripClose()
         time.sleep(2)
-        self.movePos((x, y, z))  
+        self.movePos((x, y, z))
+        self.events.spheroCatched((x, y, newZ))
     
     def drop(self, newZ=220):
         x, y, z = self.getCurrentPos()
         self.movePos((x, y, newZ))
         self.gripOpen()
         time.sleep(2)
-        self.movePos((x, y, z))  
+        self.movePos((x, y, z))
+        self.events.spheroDroppedAt((x, y, newZ))
     
     def gripBasedOnCameraCenter(self):
         x, y, z = self.getCurrentPos()
-        self.movePos((x + 58, y + 20 ,220))
+        catchPosition = (x + 58, y + 20 ,220)
+        self.movePos(catchPosition)
         self.gripClose()
         time.sleep(2)
         self.movePos((x, y, z))
+        self.events.spheroCatched(catchPosition)
     
     def dropBasedOnCameraCenter(self):
         x, y, z = self.getCurrentPos()
-        self.movePos((x + 58, y + 20 ,220))
+        dropPosition = (x + 58, y + 20 ,220)
+        self.movePos(dropPosition)
         self.gripOpen()
         time.sleep(2)
         self.movePos((x, y, z))
@@ -72,6 +72,7 @@ class XarmNavigator:
         return isOk
     
     def gripAllLoadPos(self):
+        self.events.gettingSpherosFromLoadstation(self.getCurrentPos())
         for i in range(len(LOAD_POSITIONS)):
             self.gripLoadPos(i + 1)
     
@@ -87,6 +88,7 @@ class XarmNavigator:
             self.movePosWithTour(LOAD_POSITIONS[loadNumber - 1])
             self.drop(LOAD_GRIP_Z)
             self.movePosWithTour(DROP_POSITIONS[loadNumber - 1])
+            self.events.spheroDroppedAtLoader(self.getCurrentPos(), loadNumber)
  
     def getCurrentPos(self):
         return (self.x, self.y, self.z)
@@ -151,7 +153,6 @@ class XarmNavigator:
         else:
             if self.isAllowedPosition(x, y):
                 points = self.path.drawPath(self.getCurrentPos(), coordinate)
-
                 for point in points:
                     self.movePos(point)
                                 
@@ -215,9 +216,11 @@ class XarmNavigator:
     
     def runTraject(self, event: threading.Event):
         lastDirection = PathDirection.RIGHT
+        self.events.trajectStarted(self.getCurrentPos())
         
         while True:
             if event.isSet():
+                self.events.trajectStopped(self.getCurrentPos())
                 return
             
             time.sleep(0.5)
@@ -228,6 +231,7 @@ class XarmNavigator:
             if res:
                 print("found 1")
                 self.trackSphero(event, WAIT_TIME_BEFORE_STOP_TRACKING)
+                self.events.spheroLost(self.getCurrentPos)
     
     def moveYAndScanN(self, event, direction):        
         xn = self.path.startCloseTo(self.getCurrentPos(), direction)         
@@ -236,6 +240,7 @@ class XarmNavigator:
                 return (False, xn)
             self.movePos(xn.next())
             if self.findSphero(event):
+                self.events.spheroDetected(self.getCurrentPos())
                 return (True, xn)
     
     def trackSpheroY(self, xPos):
