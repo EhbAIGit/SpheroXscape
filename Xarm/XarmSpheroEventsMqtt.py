@@ -43,7 +43,7 @@ class XarmSpheroEventsMqtt:
         self.sendMessage(4, position, "Sphero discovered")
 
     def spheroCatched(self, position):
-        self.sendMessage(6, "Sphero catched")
+        self.sendMessage(6, position, "Sphero catched")
  
     def trajectStarted(self, position):
         self.sendMessage(2, position, "Traject and scanning has started")

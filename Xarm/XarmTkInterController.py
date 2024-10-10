@@ -41,7 +41,7 @@ class XarmTkInterController:
         
         self.belowCanvasFrame = Frame(self.rightframe)
         
-        
+        Button(self.belowCanvasFrame, text="Place Sphero's", command=self.placeAllSpheros).pack(side = LEFT) 
         Button(self.belowCanvasFrame, text="Start Traject", command=self.traject).pack(side = LEFT) 
         Button(self.belowCanvasFrame, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).pack(side = LEFT)
         Button(self.belowCanvasFrame, text="PS 1", command=self.placeSphero1).pack(side = LEFT)
