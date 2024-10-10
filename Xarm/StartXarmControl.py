@@ -13,7 +13,7 @@ def createSimulationEnvironment():
 
 def createRealEnvironment():
     from XarmDriver import XarmDriver
-    return XarmDriver()
+    return XarmDriver(ip = XARM_IP)
 
 def createController(navigator):
     from XarmGamePadController import XarmGamePadController

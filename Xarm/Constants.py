@@ -49,3 +49,5 @@ INNER_BOUNDARY = SquareBoundary(
     zMin=None,    zMax = None)
 
 BACK_BOUNDARY = LineBoundary((-150,0), (-1000,0))
+
+XARM_IP = '10.2.172.20'
