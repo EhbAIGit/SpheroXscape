@@ -104,18 +104,21 @@ class XarmTkInterController:
         dotColor = "#476042"
         self.canvas.create_oval(x1, y1, x2, y2, fill=dotColor, outline=dotColor, width=10)
     
+    def invertY(self, y):
+        return SIZE_CANVAS_Y - y
+    
     def drawLinesOnCanvas(self, coords):
         for pos in range(1, len(coords)):
             startX, startY = self.xarmToCanvasCoord(coords[pos - 1])
             endX, endY = self.xarmToCanvasCoord(coords[pos])
-            self.canvas.create_line(startX, startY, endX, endY)
+            self.canvas.create_line(startX, self.invertY(startY), endX, self.invertY(endY))
 
     def canvasCallback(self, event):
         coord = (event.x, event.y)
         self.drawCanvas(coord)
         x, y = self.canvasToXarmCoord(coord)
         self.xText.set(str(x))
-        self.yText.set(str(y))
+        self.yText.set(str(-y))
 
     def placeSphero1(self):
         self.robotControl.dropLoadPos(1)
