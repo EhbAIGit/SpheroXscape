@@ -26,9 +26,6 @@ class XarmTkInterController:
         self.menubar.add_cascade(label="Extra's", menu=self.menu)
         
         #self.root.attributes('-fullscreen', True)
-
-        self.leftframe = Frame(self.root)  
-        self.leftframe.pack(side = LEFT)  
         
         self.rightframe = Frame(self.root)  
         self.rightframe.pack(side = RIGHT)
@@ -59,8 +56,6 @@ class XarmTkInterController:
         
         self.belowCanvasFrame.pack(side = TOP)
         self.prepareCanvas()
-        
-        
         
     def prepareCanvas(self):
         
