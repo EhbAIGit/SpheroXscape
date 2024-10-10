@@ -18,7 +18,8 @@ DROP_POSITIONS = ((235, -200, 400),
                     (235, 100, 400),
                     (235, 200, 400))
 
-MQTT_HOST = "localhost"
+MQTT_HOST_LOCAL = "localhost"
+MQTT_HOST = "broker.emqx.io"
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 45
 MQTT_TOPIC = "xarmSpheroEvents"
