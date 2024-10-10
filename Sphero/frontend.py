@@ -4,7 +4,7 @@ import threading
 import atexit
 import paho.mqtt.client as mqtt
 
-sshRpi = ("pi@192.168.0.70","pi@192.168.0.70","pi@192.168.0.70")
+sshRpi = ("pi@10.2.172.138","pi@10.2.172.139","pi@10.2.172.140")
 spheroIds = ("SB-24D3","SB-1D86","SB-27A5","SB-81E0","SB-7740")
 
 # Functie om het SSH-commando uit te voeren
@@ -73,7 +73,7 @@ button1 = tk.Button(button_frame, text=f"Launch Player 1",
 button1.grid(row=0, column=0, padx=5)
 
 button2 = tk.Button(button_frame, text=f"Launch Player 2", 
-                       command=lambda : run_ssh_command(sshRpi[0],spheroIds[1], 0, 2),  # Standaard joystick op 0
+                       command=lambda : run_ssh_command(sshRpi[0],spheroIds[1], 1, 2),  # Standaard joystick op 0
                        font=("Helvetica", 14))
 button2.grid(row=0, column=1, padx=5)
 
