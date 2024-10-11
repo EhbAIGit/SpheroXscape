@@ -22,6 +22,7 @@ class XarmTkInterController:
         self.menu.add_command(label="Grip open", command=self.gripperOpen)
         self.menu.add_command(label="Grip close", command=self.gripperClose)
         self.menu.add_command(label="Drop Sphero Camera", command=self.dropBasedOnCameraCenter)
+        self.menu.add_command(label="Reset", command=self.reset)
         
         self.menubar.add_cascade(label="Extra's", menu=self.menu)
         
@@ -56,7 +57,10 @@ class XarmTkInterController:
         
         self.belowCanvasFrame.pack(side = TOP)
         self.prepareCanvas()
-        
+    
+    def reset(self):
+        self.robotControl.recover()
+    
     def prepareCanvas(self):
         
         self.createCoordinateInput()
