@@ -14,12 +14,16 @@ class XarmSpheroEventsMqtt:
         self.mqtt.connect(host, MQTT_PORT)
         
     def createMessage(self, code, position, payload):
+        """
         message = {
             'code' : code,
             'position' : position,
             'payload' : payload
         }
         return json.dumps(message)
+        """
+        return f"{code}: {payload}"
+    
     
     def onConnect(self, client, userdata, flags, rc, props):
         if rc == 0:
