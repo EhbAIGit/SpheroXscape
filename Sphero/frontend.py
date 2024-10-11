@@ -4,10 +4,11 @@ import threading
 import atexit
 import paho.mqtt.client as mqtt
 
-sshRpi = ("pi@10.2.172.138","pi@10.2.172.139","pi@10.2.172.140")
-spheroIds = ("SB-24D3","SB-1D86","SB-27A5","SB-81E0","SB-7740")
+sshRpi = ("pi@10.2.172.177","pi@10.2.172.189","pi@10.2.172.116")
+#spheroIds = ("SB-27A5","SB-81E0","SB-B30C","SB-24D3","SB-1D86")
+spheroIds = ("SB-81E0","SB-E30C","SB-86B7","SB-27A5","SB-A3EF")
 
-# Functie om het SSH-commando uit te voeren
+# Functie om het SSH-commando uit te voeren2
 def run_ssh_command(sshrpi,id, number, joystick):
     try:
         ssh_command = f"./sphero.sh {id} {number} {joystick}"
@@ -78,17 +79,17 @@ button2 = tk.Button(button_frame, text=f"Launch Player 2",
 button2.grid(row=0, column=1, padx=5)
 
 button3 = tk.Button(button_frame, text=f"Launch Player 3", 
-                       command=lambda : run_ssh_command(sshRpi[1],spheroIds[1], 0, 3),  # Standaard joystick op 0
+                       command=lambda : run_ssh_command(sshRpi[1],spheroIds[2], 0, 3),  # Standaard joystick op 0
                        font=("Helvetica", 14))
 button3.grid(row=0, column=2, padx=5)
 
 button4 = tk.Button(button_frame, text=f"Launch Player 4", 
-                       command=lambda : run_ssh_command(sshRpi[1],spheroIds[1], 1, 4),  # Standaard joystick op 0
+                       command=lambda : run_ssh_command(sshRpi[1],spheroIds[3], 1, 4),  # Standaard joystick op 0
                        font=("Helvetica", 14))
 button4.grid(row=0, column=3, padx=5)
 
 button5 = tk.Button(button_frame, text=f"Launch Player 5", 
-                       command=lambda : run_ssh_command(sshRpi[2],spheroIds[1], 0, 5),  # Standaard joystick op 0
+                       command=lambda : run_ssh_command(sshRpi[2],spheroIds[4], 0, 5),  # Standaard joystick op 0
                        font=("Helvetica", 14))
 button5.grid(row=0, column=4, padx=5)
 
