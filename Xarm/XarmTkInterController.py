@@ -3,15 +3,15 @@ from threading import *
 from XarmNavigator import XarmNavigator
 from Constants import *
 
-SIZE_CANVAS_Y = 950
-SIZE_CANVAS_X = 950
+SIZE_CANVAS_Y = 930
+SIZE_CANVAS_X = 930
 
 class XarmTkInterController:
 
     def __init__(self, navigator):
         self.root = Tk() 
         self.root.title("XarmSpheroControl")
-        self.root.geometry("1350x1200") 
+        self.root.geometry("1100x1200") 
         
         self.menubar = Menu(self.root)
         self.root.config(menu=self.menubar)
@@ -26,8 +26,7 @@ class XarmTkInterController:
         
         self.menubar.add_cascade(label="Extra's", menu=self.menu)
         
-        #self.root.attributes('-fullscreen', True)
-        
+       
         self.rightframe = Frame(self.root)  
         self.rightframe.pack(side = RIGHT)
         
@@ -36,34 +35,63 @@ class XarmTkInterController:
         self.t = None
         self.thr = None    
        
-        
         self.belowCanvasFrame = Frame(self.rightframe)
         
-        Button(self.belowCanvasFrame, text="Place Sphero's", command=self.placeAllSpheros).pack(side = LEFT) 
-        Button(self.belowCanvasFrame, text="Start Traject", command=self.traject).pack(side = LEFT) 
-        Button(self.belowCanvasFrame, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).pack(side = LEFT)
-        Button(self.belowCanvasFrame, text="PS 1", command=self.placeSphero1).pack(side = LEFT)
-        Button(self.belowCanvasFrame, text="PS 2", command=self.placeSphero2).pack(side = LEFT)
-        Button(self.belowCanvasFrame, text="PS 3", command=self.placeSphero3).pack(side = LEFT)
-        Button(self.belowCanvasFrame, text="PS 4", command=self.placeSphero4).pack(side = LEFT)
-        Button(self.belowCanvasFrame, text="PS 5", command=self.placeSphero5).pack(side = LEFT)
-        Button(self.belowCanvasFrame, text="Stop traject", command=self.stopThread).pack(side = LEFT) 
-        # Button(self.belowCanvasFrame, text="Grap Sphero from loader", command=self.grapSpheroFromLoader).pack(side = LEFT)
+        Button(self.belowCanvasFrame, text="Place all Sphero's", command=self.placeAllSpheros).grid(row=0, sticky="EW") 
         
-        #self.spheroNumberText = StringVar(self.root)
-        #self.spheroNumberEntry = Entry(self.belowCanvasFrame, width=3, textvariable=self.spheroNumberText)
-        #self.spheroNumberEntry.pack(side = LEFT)
-        #Button(self.belowCanvasFrame, text="Grap all Sphero's", command=self.placeAllSpheros).pack(side = LEFT)
+        self.placeAndDropButtons = Frame(self.belowCanvasFrame)
         
-        self.belowCanvasFrame.pack(side = TOP)
-        self.prepareCanvas()
-    
-    def reset(self):
-        self.robotControl.recover()
-    
-    def prepareCanvas(self):
+        Button(self.placeAndDropButtons, text="GS 1", command=self.gripSphero1).grid(column=0, row=0, sticky="EW")
+        Button(self.placeAndDropButtons, text="GS 2", command=self.gripSphero2).grid(column=1, row=0, sticky="EW")
+        Button(self.placeAndDropButtons, text="GS 3", command=self.gripSphero3).grid(column=2, row=0, sticky="EW")
+        Button(self.placeAndDropButtons, text="GS 4", command=self.gripSphero4).grid(column=3, row=0, sticky="EW")
+        Button(self.placeAndDropButtons, text="GS 5", command=self.gripSphero5).grid(column=4, row=0, sticky="EW")
+        
+        Button(self.placeAndDropButtons, text="DS 1", command=self.dropSphero1).grid(column=0, row=1, sticky="EW")
+        Button(self.placeAndDropButtons, text="DS 2", command=self.dropSphero2).grid(column=1, row=1, sticky="EW")
+        Button(self.placeAndDropButtons, text="DS 3", command=self.dropSphero3).grid(column=2, row=1, sticky="EW")
+        Button(self.placeAndDropButtons, text="DS 4", command=self.dropSphero4).grid(column=3, row=1, sticky="EW")
+        Button(self.placeAndDropButtons, text="DS 5", command=self.dropSphero5).grid(column=4, row=1, sticky="EW")
+        
+        self.placeAndDropButtons.grid(row=1, sticky="EW")
+        
+        self.trajectFrame = Frame(self.belowCanvasFrame)
+        Button(self.trajectFrame, text="Start Traject", command=self.traject).grid(row=0, column=0, sticky="EW")
+        Button(self.trajectFrame, text="Stop traject", command=self.stopThread).grid(row=0, column=1,  sticky="EW")
+        self.trajectFrame.grid(row=2, sticky="EW", pady=10)
+        
+        Button(self.belowCanvasFrame, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).grid(row=3, sticky="EW")
+        
+        self.belowCanvasFrame.pack(side = LEFT)
         
         self.createCoordinateInput()
+        
+        self.prepareCanvas()
+
+    def createCoordinateInput(self):
+        self.coordinatesFrame = Frame(self.belowCanvasFrame)
+        self.coordinatesFrame.grid(row=5, sticky="EW", pady=10)
+
+        Button(self.coordinatesFrame, text="Base", command=self.basePosition).pack(side = LEFT)
+
+        Label(self.coordinatesFrame, text = "x: ").pack(side=LEFT)
+        self.xText = StringVar(self.root)
+        self.xEntry = Entry(self.coordinatesFrame, textvariable=self.xText, width=3)
+        self.xEntry.pack(side =LEFT)
+        
+        Label(self.coordinatesFrame, text = "y: ").pack(side=LEFT)
+        self.yText = StringVar(self.root)
+        self.yEntry = Entry(self.coordinatesFrame, textvariable=self.yText, width=3)
+        self.yEntry.pack(side =LEFT)
+        
+        Label(self.coordinatesFrame, text = "z: ").pack(side=LEFT)
+        self.zText = StringVar(self.root)
+        self.zEntry = Entry(self.coordinatesFrame, textvariable=self.zText, width=3)
+        self.zEntry.pack(side =LEFT)
+        
+        Button(self.coordinatesFrame, text="Move", command=self.move).pack(side = LEFT)
+    
+    def prepareCanvas(self):
         self.fillPositionsEntry()
         
         self.canvas = Canvas(self.rightframe, bg="white", height=950, width=950)
@@ -123,20 +151,38 @@ class XarmTkInterController:
         x, y = self.canvasToXarmCoord(coord)
         self.xText.set(str(x))
         self.yText.set(str(-y))
+    
+    def reset(self):
+        self.robotControl.recover()
 
-    def placeSphero1(self):
+    def gripSphero1(self):
+        self.robotControl.gripLoadPos(1)
+
+    def gripSphero2(self):
+        self.robotControl.gripLoadPos(2)
+        
+    def gripSphero3(self):
+        self.robotControl.gripLoadPos(3)
+
+    def gripSphero4(self):
+        self.robotControl.gripLoadPos(4)
+    
+    def gripSphero5(self):
+        self.robotControl.gripLoadPos(5)
+    
+    def dropSphero1(self):
         self.robotControl.dropLoadPos(1)
 
-    def placeSphero2(self):
+    def dropSphero2(self):
         self.robotControl.dropLoadPos(2)
         
-    def placeSphero3(self):
+    def dropSphero3(self):
         self.robotControl.dropLoadPos(3)
 
-    def placeSphero4(self):
+    def dropSphero4(self):
         self.robotControl.dropLoadPos(4)
     
-    def placeSphero5(self):
+    def dropSphero5(self):
         self.robotControl.dropLoadPos(5)
     
     def placeSphero(self):
@@ -167,47 +213,6 @@ class XarmTkInterController:
         self.stopThread()
         self.robotControl.drop()
 
-    def createCoordinateInput(self):
-        self.coordinatesFrame = Frame(self.rightframe)
-        self.coordinatesFrame.pack(side = BOTTOM)
-
-        Button(self.coordinatesFrame, text="Go baseposition", command=self.basePosition).pack(side = LEFT)
-
-        Label(self.coordinatesFrame, text = "x: ").pack(side=LEFT)
-        self.xText = StringVar(self.root)
-        self.xEntry = Entry(self.coordinatesFrame, textvariable=self.xText, width=3)
-        self.xEntry.pack(side =LEFT)
-        
-        Label(self.coordinatesFrame, text = "y: ").pack(side=LEFT)
-        self.yText = StringVar(self.root)
-        self.yEntry = Entry(self.coordinatesFrame, textvariable=self.yText, width=3)
-        self.yEntry.pack(side =LEFT)
-        
-        Label(self.coordinatesFrame, text = "z: ").pack(side=LEFT)
-        self.zText = StringVar(self.root)
-        self.zEntry = Entry(self.coordinatesFrame, textvariable=self.zText, width=3)
-        self.zEntry.pack(side =LEFT)
-        
-        Button(self.coordinatesFrame, text="Move", command=self.move).pack(side = LEFT)
-
-    """    
-    def createCoordinateOutput(self):
-        self.coordinatesOutputFrame = Frame(self.leftframe)
-        self.coordinatesOutputFrame.pack(side = TOP)
-
-        Label(self.coordinatesOutputFrame, text = "x: ").pack(side=LEFT)
-        self.xROText = StringVar(self.root)
-        Label(self.coordinatesOutputFrame, textvariable=self.xROText).pack(side=LEFT)
-        
-        Label(self.coordinatesOutputFrame, text = "y: ").pack(side=LEFT)
-        self.yROText = StringVar(self.root)
-        Label(self.coordinatesOutputFrame, textvariable=self.yROText).pack(side=LEFT)
-        
-        Label(self.coordinatesOutputFrame, text = "z: ").pack(side=LEFT)
-        self.zROText = StringVar(self.root)
-        Label(self.coordinatesOutputFrame, textvariable=self.zROText).pack(side=LEFT)
-    """
-        
     def fillPositionsEntry(self):
         x, y, z = self.robotControl.getCurrentPos()
 
