@@ -22,7 +22,7 @@ MQTT_HOST_LOCAL = "localhost"
 MQTT_HOST = "broker.emqx.io"
 MQTT_PORT = 1883
 MQTT_KEEPALIVE_INTERVAL = 45
-MQTT_TOPIC = "xarmSpheroEvents"
+MQTT_TOPIC = "xarm/robot_status"
 
 WARMUP_CAM = 1
 
