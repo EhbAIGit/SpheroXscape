@@ -17,10 +17,7 @@ def pprint(*args, **kwargs):
         print(*args, **kwargs)
 
 class XarmDriver:
-    def __init__(self):
-        self.initXArm()
-
-    def initXArm(self, ip='10.2.172.20'):
+    def __init__(self, ip='10.2.172.20'):
         pprint('xArm-Python-SDK Version:{}'.format(version.__version__))
 
         self.arm = XArmAPI(ip)
