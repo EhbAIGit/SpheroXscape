@@ -26,7 +26,6 @@ class XarmTkInterController:
         self.menu.add_command(label="Reset", command=self.reset)
         
         self.menubar.add_cascade(label="Extra's", menu=self.menu)
-        
        
         self.rightframe = Frame(self.root)  
         self.rightframe.pack(side = RIGHT)
@@ -38,7 +37,7 @@ class XarmTkInterController:
        
         self.belowCanvasFrame = Frame(self.rightframe)
         
-        Button(self.belowCanvasFrame, text="Place all Sphero's", command=self.placeAllSpheros).grid(row=0, sticky="EW") 
+        Button(self.belowCanvasFrame, text="Drop all Sphero's", command=self.placeAllSpheros).grid(row=0, sticky="EW") 
         
         self.placeAndDropButtons = Frame(self.belowCanvasFrame)
         
@@ -60,7 +59,7 @@ class XarmTkInterController:
         Button(self.trajectFrame, text="<< Traject", command=self.trajectLeft).grid(row=0, column=0, sticky="EW")
         Button(self.trajectFrame, text="Stop traject", command=self.stopThread).grid(row=0, column=1,  sticky="EW")
         Button(self.trajectFrame, text="Traject >>", command=self.trajectRight).grid(row=0, column=2, sticky="EW")
-        self.trajectFrame.grid(row=2, sticky="EW", pady=10)
+        self.trajectFrame.grid(row=2, sticky="EW")
         
         Button(self.belowCanvasFrame, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).grid(row=3, sticky="EW")
         
@@ -68,11 +67,16 @@ class XarmTkInterController:
         
         self.createCoordinateInput()
         
+        self.moveTrajectFrame = Frame(self.belowCanvasFrame)
+        Button(self.moveTrajectFrame, text="<< Move & Traject", command=self.trajectLeft).grid(row=0, column=0, sticky="EW")
+        Button(self.moveTrajectFrame, text="Move & Traject >>", command=self.trajectRight).grid(row=0, column=1, sticky="EW")
+        self.moveTrajectFrame.grid(row=6, sticky="EW")
+        
         self.prepareCanvas()
 
     def createCoordinateInput(self):
         self.coordinatesFrame = Frame(self.belowCanvasFrame)
-        self.coordinatesFrame.grid(row=5, sticky="EW", pady=10)
+        self.coordinatesFrame.grid(row=5, sticky="EW")
 
         Button(self.coordinatesFrame, text="Base", command=self.basePosition).pack(side = LEFT)
 
@@ -257,6 +261,20 @@ class XarmTkInterController:
         
     def trajectLeft(self):
         self.stopThread()
+        self.t = Event()
+        self.thr = Thread(target = self.robotControl.runTraject, args={self.t,PathDirection.LEFT})
+        self.thr.start()
+    
+    def moveAndTrajectRight(self):
+        self.stopThread()
+        self.robotControl.movePosWithTour(self.getCoordinateFromGUI())
+        self.t = Event()
+        self.thr = Thread(target = self.robotControl.runTraject, args={self.t,PathDirection.RIGHT})
+        self.thr.start()
+        
+    def moveAndTrajectLeft(self):
+        self.stopThread()
+        self.robotControl.movePosWithTour(self.getCoordinateFromGUI())
         self.t = Event()
         self.thr = Thread(target = self.robotControl.runTraject, args={self.t,PathDirection.LEFT})
         self.thr.start()
