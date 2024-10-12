@@ -214,8 +214,8 @@ class XarmNavigator:
                         return True
         return False
     
-    def runTraject(self, event: threading.Event):
-        lastDirection = PathDirection.RIGHT
+    def runTraject(self, event: threading.Event, direction = PathDirection.RIGHT):
+        lastDirection = direction
         self.events.trajectStarted(self.getCurrentPos())
         
         while True:

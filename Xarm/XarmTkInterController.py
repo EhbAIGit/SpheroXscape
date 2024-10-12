@@ -2,6 +2,7 @@ from tkinter import *
 from threading import *
 from XarmNavigator import XarmNavigator
 from Constants import *
+from XarmUPath import PathDirection
 
 SIZE_CANVAS_Y = 930
 SIZE_CANVAS_X = 930
@@ -56,8 +57,9 @@ class XarmTkInterController:
         self.placeAndDropButtons.grid(row=1, sticky="EW")
         
         self.trajectFrame = Frame(self.belowCanvasFrame)
-        Button(self.trajectFrame, text="Start Traject", command=self.traject).grid(row=0, column=0, sticky="EW")
+        Button(self.trajectFrame, text="<< Traject", command=self.trajectLeft).grid(row=0, column=0, sticky="EW")
         Button(self.trajectFrame, text="Stop traject", command=self.stopThread).grid(row=0, column=1,  sticky="EW")
+        Button(self.trajectFrame, text="Traject >>", command=self.trajectRight).grid(row=0, column=2, sticky="EW")
         self.trajectFrame.grid(row=2, sticky="EW", pady=10)
         
         Button(self.belowCanvasFrame, text="Grap Sphero Camera", command=self.gripBasedOnCameraCenter).grid(row=3, sticky="EW")
@@ -247,10 +249,16 @@ class XarmTkInterController:
         self.thr = Thread(target = self.robotControl.findSphero, args={self.t,})
         self.thr.start()
     
-    def traject(self):
+    def trajectRight(self):
         self.stopThread()
         self.t = Event()
-        self.thr = Thread(target = self.robotControl.runTraject, args={self.t,})
+        self.thr = Thread(target = self.robotControl.runTraject, args={self.t,PathDirection.RIGHT})
+        self.thr.start()
+        
+    def trajectLeft(self):
+        self.stopThread()
+        self.t = Event()
+        self.thr = Thread(target = self.robotControl.runTraject, args={self.t,PathDirection.LEFT})
         self.thr.start()
     
     def stopThread(self):
