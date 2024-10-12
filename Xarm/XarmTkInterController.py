@@ -82,17 +82,17 @@ class XarmTkInterController:
 
         Label(self.coordinatesFrame, text = "x: ").pack(side=LEFT)
         self.xText = StringVar(self.root)
-        self.xEntry = Entry(self.coordinatesFrame, textvariable=self.xText, width=3)
+        self.xEntry = Entry(self.coordinatesFrame, textvariable=self.xText, width=4)
         self.xEntry.pack(side =LEFT)
         
         Label(self.coordinatesFrame, text = "y: ").pack(side=LEFT)
         self.yText = StringVar(self.root)
-        self.yEntry = Entry(self.coordinatesFrame, textvariable=self.yText, width=3)
+        self.yEntry = Entry(self.coordinatesFrame, textvariable=self.yText, width=4)
         self.yEntry.pack(side =LEFT)
         
         Label(self.coordinatesFrame, text = "z: ").pack(side=LEFT)
         self.zText = StringVar(self.root)
-        self.zEntry = Entry(self.coordinatesFrame, textvariable=self.zText, width=3)
+        self.zEntry = Entry(self.coordinatesFrame, textvariable=self.zText, width=4)
         self.zEntry.pack(side =LEFT)
         
         Button(self.coordinatesFrame, text="Move", command=self.move).pack(side = LEFT)
